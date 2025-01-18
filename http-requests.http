@@ -1,0 +1,14 @@
+### Create a new term
+POST http://localhost:8080/api/v1/terms
+Content-Type: application/json
+
+{
+  "title": "Winter",
+  "definition": "The coldest season of the year, in the northern hemisphere from December to February and in the southern hemisphere from June to August."
+}
+
+### Search for query
+< {%
+    request.variables.set("query", "winter");
+%}
+GET http://localhost:8080/api/v1/terms/{{query}}
