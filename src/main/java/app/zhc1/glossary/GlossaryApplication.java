@@ -27,8 +27,15 @@ public class GlossaryApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("Glossary DB Path: {}", dbPath);
+        printDbPath();
+        setupSamples();
+    }
 
+    private void printDbPath() {
+        log.info("Glossary DB Path: {}/.glossary/db", dbPath);
+    }
+
+    private void setupSamples() {
         log.info("Adding sample terms...");
         termService.add(new Term("Java", "A high-level programming language developed by Sun Microsystems."));
         termService.add(new Term("Java", "An island of Indonesia."));
