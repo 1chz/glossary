@@ -17,21 +17,19 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@Getter
 @Indexed
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Term {
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Getter
     @FullTextField(analyzer = "standard")
     @Column(nullable = false, length = 50)
     private String title;
 
-    @Getter
     @FullTextField(analyzer = "standard")
     @Column(nullable = false, length = 2_000)
     private String definition;

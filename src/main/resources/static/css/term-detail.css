@@ -1,0 +1,121 @@
+.detail-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.detail-header {
+    margin-bottom: 30px;
+}
+
+.navigation {
+    margin-bottom: 20px;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: #1e90ff;
+}
+
+.term-info {
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 20px;
+}
+
+.term-title {
+    font-size: 2em;
+    color: #333;
+    margin: 0 0 15px 0;
+}
+
+.term-meta {
+    display: flex;
+    gap: 20px;
+    color: #666;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+}
+
+.meta-label {
+    color: #888;
+}
+
+.meta-value {
+    color: #444;
+}
+
+.detail-content {
+    padding: 20px 0;
+}
+
+.section-title {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.definition-content {
+    color: #444;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+.detail-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: #0066cc;
+}
+
+@media (max-width: 768px) {
+    .detail-container {
+        padding: 15px;
+    }
+
+    .term-title {
+        font-size: 1.5em;
+    }
+
+    .term-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

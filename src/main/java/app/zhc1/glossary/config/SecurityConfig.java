@@ -19,7 +19,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth.requestMatchers(
-                                "/", "/search", "/api/v1/terms/**", "/css/**", "/js/**", "/images/**", "/login")
+                                "/",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/login",
+                                "/api/v1/keywords",
+                                "/search-results",
+                                "/terms/**")
                         .permitAll()
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")

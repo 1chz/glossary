@@ -8,8 +8,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class DBPathPrinter implements CommandLineRunner {
-    @Value("${glossary.dbpath}")
-    private String dbPath;
+    private final String dbPath;
+
+    public DBPathPrinter(@Value("${glossary.dbpath}") String dbPath) {
+        this.dbPath = validatePath(dbPath);
+    }
+
+    private String validatePath(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            throw new IllegalArgumentException("DB path cannot be empty !");
+        }
+        return path;
+    }
 
     @Override
     public void run(String... args) {

@@ -6,6 +6,7 @@ import app.zhc1.glossary.repository.TermRepository;
 import app.zhc1.glossary.repository.TermRevisionRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,11 @@ public class TermService {
     private final EntityManager entityManager;
     private final TermRepository termRepository;
     private final TermRevisionRepository termRevisionRepository;
+
+    @Transactional(readOnly = true)
+    public Optional<Term> get(int id) {
+        return termRepository.findById(id);
+    }
 
     @Transactional
     public Term add(Term term) {
@@ -48,11 +54,13 @@ public class TermService {
     }
 
     @Transactional(readOnly = true)
-    public List<Term> query(String query) {
+    public List<Term> query(String keyword) {
         return Search.session(entityManager)
                 .search(Term.class)
-                .where(f ->
-                        f.match().fields("title", "definition").matching(query).fuzzy(calculateFuzzyDistance(query)))
+                .where(f -> f.match()
+                        .fields("title", "definition")
+                        .matching(keyword)
+                        .fuzzy(calculateFuzzyDistance(keyword)))
                 .fetchHits(10);
     }
 

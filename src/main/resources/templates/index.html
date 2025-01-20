@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Glossary - 용어집</title>
+    <title>Glossary</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -19,7 +19,7 @@
                    class="search-box"
                    id="searchInput"
                    placeholder="검색어를 입력하세요..."
-                   th:attr="data-search-url=@{/api/v1/terms/}">
+                   th:attr="data-search-url=@{/api/v1/keywords}">
             <button class="search-button" onclick="goToSearchPage()">검색</button>
             <div class="results-container" id="searchResults"></div>
         </div>
@@ -54,7 +54,7 @@
 
     async function fetchSearchResults(query) {
         try {
-            const url = `${baseUrl}${encodeURIComponent(query)}`;
+            const url = `${baseUrl}?keyword=${encodeURIComponent(query)}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -100,7 +100,7 @@
     function goToSearchPage() {
         const query = searchInput.value.trim();
         if (query) {
-            window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            window.location.href = `/search-results?keyword=${encodeURIComponent(query)}`;
         }
     }
 </script>

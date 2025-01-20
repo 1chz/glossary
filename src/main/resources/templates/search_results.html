@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>검색 결과 - Glossary</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/search-results.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+    <div class="search-results-container">
+        <div class="search-header">
+            <h2 class="search-title">
+                '<span th:text="${keyword}" class="keyword"></span>' 검색 결과
+                <span class="result-count" th:text="${searchResults.size() + '건'}"></span>
+            </h2>
+            <div class="search-box-wrapper">
+                <input type="text"
+                       class="search-box"
+                       id="searchInput"
+                       th:value="${keyword}"
+                       placeholder="검색어를 입력하세요..."
+                       th:attr="data-search-url=@{/api/v1/terms/}">
+                <button class="search-button" onclick="search()">검색</button>
+            </div>
+        </div>
+
+        <div class="results-list" th:if="${!searchResults.empty}">
+            <div class="term-card" th:each="term : ${searchResults}" th:data-id="${term.id()}" onclick="goToDetail(this.getAttribute('data-id'))">
+                <div class="term-header">
+                    <h3 class="term-title" th:text="${term.title()}"></h3>
+                    <div class="term-meta">
+            <span class="term-date">
+                등록일: <span th:text="${#temporals.format(term.createdAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
+            </span>
+                        <span class="term-date">
+                수정일: <span th:text="${#temporals.format(term.updatedAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
+            </span>
+                    </div>
+                </div>
+                <p class="term-definition" th:text="${#strings.length(term.definition()) > 50 ? #strings.substring(term.definition(), 0, 50) + '...' : term.definition()}"></p>
+            </div>
+        </div>
+
+        <div class="no-results" th:if="${searchResults.empty}">
+            <i class="fas fa-search"></i>
+            <p>'<span th:text="${keyword}"></span>'에 대한 검색 결과가 없습니다.</p>
+            <p class="sub-text">다른 검색어를 입력하시거나 철자를 확인해주세요.</p>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:inline="javascript">
+    function search() {
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+            window.location.href = `/search-results?keyword=${encodeURIComponent(query)}`;
+        }
+    }
+
+    function goToDetail(id) {
+        window.location.href = `/terms/${id}`;
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            search();
+        }
+    });
+</script>
+</body>
+</html>
+
