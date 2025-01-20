@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Glossary - 용어집</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+    <div class="search-container">
+        <h1 class="logo">Glossary</h1>
+        <p class="subtitle">쉬운 커뮤니케이션을 위한 용어집</p>
+        <div class="search-wrapper">
+            <input type="text"
+                   class="search-box"
+                   id="searchInput"
+                   placeholder="검색어를 입력하세요..."
+                   th:attr="data-search-url=@{/api/v1/terms/}">
+            <button class="search-button" onclick="goToSearchPage()">검색</button>
+            <div class="results-container" id="searchResults"></div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:inline="javascript">
+    let debounceTimer;
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const baseUrl = searchInput.getAttribute('data-search-url');
+
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            goToSearchPage();
+            return;
+        }
+
+        clearTimeout(debounceTimer);
+        const query = this.value.trim();
+
+        if (query.length > 0) {
+            debounceTimer = setTimeout(() => {
+                fetchSearchResults(query);
+            }, 300);
+        } else {
+            searchResults.innerHTML = '';
+        }
+    });
+
+    async function fetchSearchResults(query) {
+        try {
+            const url = `${baseUrl}${encodeURIComponent(query)}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            displayResults(data.keywords);
+        } catch (error) {
+            console.error('Error:', error);
+            searchResults.innerHTML = '<div class="result-item">검색 중 오류가 발생했습니다.</div>';
+        }
+    }
+
+    function displayResults(results) {
+        searchResults.innerHTML = '';
+
+        if (!Array.isArray(results) || results.length === 0) {
+            searchResults.innerHTML = '<div class="result-item">검색 결과가 없습니다.</div>';
+            return;
+        }
+
+        const uniqueResults = [...new Set(results)];
+
+        uniqueResults.forEach(term => {
+            const resultElement = document.createElement('div');
+            resultElement.className = 'result-item';
+            resultElement.textContent = term;
+            resultElement.onclick = () => {
+                searchInput.value = term;
+                goToSearchPage();
+            };
+            searchResults.appendChild(resultElement);
+        });
+    }
+
+    function goToSearchPage() {
+        const query = searchInput.value.trim();
+        if (query) {
+            window.location.href = `/search?query=${encodeURIComponent(query)}`;
+        }
+    }
+</script>
+</body>
+</html>

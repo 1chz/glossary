@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<header th:fragment="header">
+    <div class="header-left">
+        <a href="/" class="logo-link">
+            <i class="fa-solid fa-book"></i>
+            <span>Glossary</span>
+        </a>
+    </div>
+    <div class="header-center"></div>
+    <div class="header-right">
+        <th:block sec:authorize="isAuthenticated()">
+            <button class="header-button" onclick="location.href='/admin'">관리</button>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="header-button">로그아웃</button>
+            </form>
+        </th:block>
+        <th:block sec:authorize="isAnonymous()">
+            <button class="header-button" onclick="location.href='/login'">로그인</button>
+        </th:block>
+    </div>
+</header>
+</body>
+</html>

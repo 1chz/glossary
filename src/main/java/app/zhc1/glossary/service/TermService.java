@@ -8,7 +8,6 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.mapper.orm.Search;
-import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,8 +49,7 @@ public class TermService {
 
     @Transactional(readOnly = true)
     public List<Term> query(String query) {
-        SearchSession searchSession = Search.session(entityManager);
-        return searchSession
+        return Search.session(entityManager)
                 .search(Term.class)
                 .where(f ->
                         f.match().fields("title", "definition").matching(query).fuzzy(calculateFuzzyDistance(query)))
