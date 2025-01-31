@@ -29,10 +29,10 @@ public class TermRevision {
     @Column(nullable = false, length = 50)
     private String afterTitle;
 
-    @Column(nullable = true, length = 2_000)
+    @Column(nullable = true, length = 5_000)
     private String beforeDefinition;
 
-    @Column(nullable = false, length = 2_000)
+    @Column(nullable = false, length = 5_000)
     private String afterDefinition;
 
     @CreatedDate

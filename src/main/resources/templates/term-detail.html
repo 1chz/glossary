@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/term-detail.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -37,12 +38,12 @@
         <div class="detail-content">
             <div class="definition-section">
                 <h2 class="section-title">정의</h2>
-                <div class="definition-content" th:text="${detail.definition()}"></div>
+                <div class="definition-content markdown-body" th:utext="${detail.definition()}"></div>
             </div>
         </div>
 
         <div class="detail-footer" sec:authorize="hasRole('ROLE_ADMIN')">
-            <button class="edit-button" th:onclick="'location.href=\'/terms/' + ${detail.id()} + '/edit\''">
+            <button class="edit-button" th:onclick="'location.href=\'/admin/terms/' + ${detail.id()} + '/edit\''">
                 <i class="fas fa-edit"></i> 수정
             </button>
         </div>

@@ -1,0 +1,258 @@
+.admin-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.new-term-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #1e90ff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.new-term-button:hover {
+    background-color: #0066cc;
+}
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #1e90ff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
+}
+
+.search-button {
+    position: absolute;
+    right: 5px;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.search-button:hover {
+    color: #1e90ff;
+}
+
+.terms-list {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.term-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.term-item:last-child {
+    border-bottom: none;
+}
+
+.term-content {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.term-title {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.term-definition {
+    color: #666;
+    font-size: 0.95em;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.term-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.85em;
+    color: #888;
+}
+
+.term-date, .term-update {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.term-date i, .term-update i {
+    font-size: 1.1em;
+    color: #1e90ff;
+}
+
+.term-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 15px;
+    background-color: #f0f0f0;
+    color: #666;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.pagination {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.pagination-info {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 4px;
+    background-color: white;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: #f0f0f0;
+}
+
+.page-link.current {
+    background-color: #1e90ff;
+    color: white;
+    cursor: default;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.no-results i {
+    font-size: 2em;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 15px;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .new-term-button {
+        text-align: center;
+    }
+
+    .term-item {
+        flex-direction: column;
+    }
+
+    .term-content {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .term-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .term-definition {
+        -webkit-line-clamp: 3;
+    }
+
+    .term-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .pagination-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .pagination-info {
+        text-align: center;
+    }
+}

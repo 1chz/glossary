@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${term != null ? '용어 수정' : '새 용어 등록'} + ' - Glossary'"></title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/term-form.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+    <div class="form-container">
+        <div class="form-header">
+            <div class="navigation">
+                <a href="javascript:history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i> 뒤로가기
+                </a>
+            </div>
+            <h1 th:text="${term != null ? '용어 수정' : '새 용어 등록'}"></h1>
+        </div>
+
+        <form id="termForm" th:action="${term != null ? '/api/v1/terms/' + term.id() : '/api/v1/terms'}"
+              method="POST" class="term-form">
+            <div class="form-group">
+                <label for="title">용어</label>
+                <input type="text" id="title" name="title"
+                       th:value="${term != null ? term.title() : ''}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editor">정의</label>
+                <div id="editor" th:data-content="${term != null ? term.definition() : ''}"></div>
+                <input type="hidden" id="definition" name="definition">
+            </div>
+
+            <div class="form-actions">
+                <button type="button" onclick="history.back()" class="cancel-button">취소</button>
+                <button type="submit" class="save-button">저장</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script th:inline="javascript">
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'script': 'sub'}, { 'script': 'super' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                ['link'],
+                ['clean']
+            ]
+        }
+    });
+
+    // 초기 내용 설정
+    const editorElement = document.getElementById('editor');
+    const initialContent = editorElement.getAttribute('data-content');
+    if (initialContent) {
+        console.log('Initial content:', initialContent);  // 디버깅용
+        quill.clipboard.dangerouslyPasteHTML(0, initialContent);
+    }
+
+    document.getElementById('termForm').onsubmit = function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const definition = quill.root.innerHTML;
+
+        if (!title || !definition) {
+            alert('모든 필드를 입력해주세요.');
+            return;
+        }
+
+        const formData = {
+            title: title,
+            definition: definition
+        };
+
+        // CSRF 토큰 가져오기
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch(this.action, {
+            method: this.method,
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('저장 실패');
+                window.location.href = '/admin';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('저장 중 오류가 발생했습니다.');
+            });
+    };
+</script>
+</body>
+</html>

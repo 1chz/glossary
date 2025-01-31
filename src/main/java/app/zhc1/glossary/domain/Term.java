@@ -31,7 +31,7 @@ public class Term {
     private String title;
 
     @FullTextField(analyzer = "standard")
-    @Column(nullable = false, length = 2_000)
+    @Column(nullable = false, length = 5_000)
     private String definition;
 
     @CreatedDate
@@ -48,6 +48,10 @@ public class Term {
         }
         if (definition == null || definition.isBlank()) {
             throw new IllegalArgumentException("definition must not be null or blank: %s".formatted(definition));
+        }
+        if (definition.length() > 5_000) {
+            throw new IllegalArgumentException(
+                    "definition must not exceed 5,000 characters: %d".formatted(definition.length()));
         }
 
         this.id = null;

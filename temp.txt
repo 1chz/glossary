@@ -1,0 +1,26 @@
+# JPA (Java Persistence API)
+JPA는 자바 애플리케이션에서 관계형 데이터베이스를 사용하는 방식을 정의한 자바 ORM 기술의 표준 사양(명세)입니다.
+
+## 핵심 개념
+### 1. ORM (Object-Relational Mapping)
+- 객체와 관계형 데이터베이스를 매핑하는 기술
+- 객체지향 프로그래밍과 관계형 데이터베이스 간의 패러다임 불일치 해결
+
+### 2. 영속성 컨텍스트
+- 엔티티를 영구 저장하는 환경
+- 1차 캐시, 동일성 보장, 트랜잭션을 지원하는 쓰기 지연, 변경 감지, 지연 로딩 제공
+
+
+@Entity
+public class Member {
+ @Id @GeneratedValue
+ private Long id;
+
+ @Column(name = "username")
+ private String name;
+
+ @ManyToOne
+ @JoinColumn(name = "team_id")
+ private Team team;
+}
+

@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
-public class PageController {
+public class CommonPageController {
     private final TermService termService;
 
     @GetMapping("/")
-    public String index() {
+    public String mainPage() {
         return "index";
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String loginPage() {
         return "login";
     }
 
     @GetMapping("/search-results")
-    public String searchResults(@RequestParam String keyword, Model model) {
+    public String termSearchResultsPage(@RequestParam String keyword, Model model) {
         List<SearchResultModel> searchResults = termService.query(keyword).stream()
                 .map(this::toModel)
                 .sorted(Comparator.comparing(SearchResultModel::title))
@@ -36,18 +36,18 @@ public class PageController {
 
         model.addAttribute("keyword", keyword);
         model.addAttribute("searchResults", searchResults);
-        return "search_results";
+        return "search-results";
     }
 
     @GetMapping("/terms/{id}")
-    public String termDetail(@PathVariable int id, Model model) {
+    public String termDetailPage(@PathVariable int id, Model model) {
         SearchResultModel searchResult = termService
                 .get(id)
                 .map(this::toModel)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown term id: '%d'".formatted(id)));
 
         model.addAttribute("detail", searchResult);
-        return "term_detail";
+        return "term-detail";
     }
 
     private SearchResultModel toModel(Term it) {
