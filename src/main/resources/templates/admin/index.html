@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 페이지 - Glossary</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>용어 관리</h1>
+            <a href="/admin/terms/new" class="new-term-button">
+                <i class="fas fa-plus"></i> 새 용어 등록
+            </a>
+        </div>
+
+        <div class="search-section">
+            <form class="search-form" method="get" action="/admin">
+                <div class="search-input-wrapper">
+                    <input type="text"
+                           name="keyword"
+                           th:value="${keyword}"
+                           placeholder="용어 검색..."
+                           class="search-input">
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="terms-list" th:if="${!terms.empty}">
+            <div class="term-item" th:each="term : ${terms}">
+                <div class="term-content">
+                    <h3 class="term-title" th:text="${term.title()}"></h3>
+                    <p class="term-definition"
+                       th:text="${#strings.length(term.shortDefinition()) > 100 ? #strings.substring(term.shortDefinition(), 0, 100) + '...' : term.shortDefinition()}">
+                    </p>
+                    <div class="term-meta">
+                            <span class="term-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span th:text="${#temporals.format(term.createdAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
+                            </span>
+                        <span class="term-update">
+                                <i class="far fa-clock"></i>
+                                최종 수정: <span th:text="${#temporals.format(term.updatedAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
+                            </span>
+                    </div>
+                </div>
+                <div class="term-actions">
+                    <a th:href="@{/admin/terms/{id}/edit(id=${term.id()})}" class="edit-button">
+                        <i class="fas fa-edit"></i> 수정
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-results" th:if="${terms.empty}">
+            <i class="fas fa-search"></i>
+            <p th:if="${keyword != null}">
+                '<span th:text="${keyword}"></span>'에 대한 검색 결과가 없습니다.
+            </p>
+            <p th:unless="${keyword != null}">
+                등록된 용어가 없습니다.
+            </p>
+        </div>
+
+        <div class="pagination" th:if="${totalPages > 1}">
+            <div class="pagination-info">
+                전체 <span th:text="${totalItems}"></span>개 항목 중
+                <span th:text="${currentPage * 10 + 1}"></span>-<span th:text="${(currentPage + 1) * 10}"></span>
+            </div>
+            <div class="pagination-controls">
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/admin(page=${currentPage - 1}, keyword=${keyword})}"
+                   class="page-link">&laquo; 이전</a>
+
+                <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a th:if="${i != currentPage}"
+                           th:href="@{/admin(page=${i}, keyword=${keyword})}"
+                           class="page-link"
+                           th:text="${i + 1}"></a>
+                        <span th:if="${i == currentPage}"
+                              class="page-link current"
+                              th:text="${i + 1}"></span>
+                    </span>
+
+                <a th:if="${currentPage < totalPages - 1}"
+                   th:href="@{/admin(page=${currentPage + 1}, keyword=${keyword})}"
+                   class="page-link">다음 &raquo;</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

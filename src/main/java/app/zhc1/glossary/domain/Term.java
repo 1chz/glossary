@@ -31,7 +31,7 @@ public class Term {
     private String title;
 
     @FullTextField(analyzer = "standard")
-    @Column(nullable = false, length = 2_000)
+    @Column(nullable = false, length = 5_000)
     private String definition;
 
     @CreatedDate
@@ -43,14 +43,22 @@ public class Term {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public Term(String title, String definition) {
+        this(null, title, definition);
+    }
+
+    public Term(Integer id, String title, String definition) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("title must not be null or blank: %s".formatted(title));
         }
         if (definition == null || definition.isBlank()) {
             throw new IllegalArgumentException("definition must not be null or blank: %s".formatted(definition));
         }
+        if (definition.length() > 5_000) {
+            throw new IllegalArgumentException(
+                    "definition must not exceed 5,000 characters: %d".formatted(definition.length()));
+        }
 
-        this.id = null;
+        this.id = id;
         this.title = title;
         this.definition = definition;
         this.createdAt = LocalDateTime.now();
@@ -59,6 +67,27 @@ public class Term {
 
     public boolean isNew() {
         return id == null;
+    }
+
+    public void updateTitle(String title) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("title must not be null or blank: %s".formatted(title));
+        }
+        if (title.length() > 50) {
+            throw new IllegalArgumentException("title must not exceed 50 characters: %d".formatted(title.length()));
+        }
+        this.title = title;
+    }
+
+    public void updateDefinition(String definition) {
+        if (definition == null || definition.isBlank()) {
+            throw new IllegalArgumentException("definition must not be null or blank: %s".formatted(definition));
+        }
+        if (definition.length() > 5_000) {
+            throw new IllegalArgumentException(
+                    "definition must not exceed 5,000 characters: %d".formatted(definition.length()));
+        }
+        this.definition = definition;
     }
 
     @Override

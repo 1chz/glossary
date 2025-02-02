@@ -8,7 +8,11 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,11 @@ public class TermService {
         return termRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Term> getAllTerms(Pageable pageable) {
+        return termRepository.findAll(pageable);
+    }
+
     @Transactional
     public Term add(Term term) {
         if (!term.isNew()) {
@@ -35,22 +44,23 @@ public class TermService {
         return newTerm;
     }
 
-    public void delete(Integer id) {
-        // TODO: Implement this method
-    }
-
     @Transactional
-    public Term update(Term term) {
-        if (term.isNew()) {
-            throw new IllegalArgumentException("Invalid update operation: %s".formatted(term));
+    public Term update(Term updatedTerm) {
+        if (updatedTerm.isNew()) {
+            throw new IllegalArgumentException("Invalid update operation: %s".formatted(updatedTerm));
         }
 
-        Term oldTerm = termRepository
-                .findById(term.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Term not found: %s".formatted(term)));
-        Term newTerm = termRepository.save(term);
-        termRevisionRepository.save(new TermRevision(oldTerm, newTerm));
-        return newTerm;
+        Term existingTerm = termRepository
+                .findById(updatedTerm.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Term not found: %s".formatted(updatedTerm)));
+
+        TermRevision revision = new TermRevision(existingTerm, updatedTerm.getTitle(), updatedTerm.getDefinition());
+
+        existingTerm.updateTitle(updatedTerm.getTitle());
+        existingTerm.updateDefinition(updatedTerm.getDefinition());
+
+        termRevisionRepository.save(revision);
+        return existingTerm;
     }
 
     @Transactional(readOnly = true)
@@ -61,7 +71,20 @@ public class TermService {
                         .fields("title", "definition")
                         .matching(keyword)
                         .fuzzy(calculateFuzzyDistance(keyword)))
-                .fetchHits(10);
+                .fetchAllHits();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Term> query(String keyword, Pageable pageable) {
+        SearchResult<Term> results = Search.session(entityManager)
+                .search(Term.class)
+                .where(f -> f.match()
+                        .fields("title", "definition")
+                        .matching(keyword)
+                        .fuzzy(calculateFuzzyDistance(keyword)))
+                .fetch((int) pageable.getOffset(), pageable.getPageSize());
+
+        return new PageImpl<>(results.hits(), pageable, results.total().hitCount());
     }
 
     private int calculateFuzzyDistance(String query) {

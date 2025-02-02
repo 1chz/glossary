@@ -29,10 +29,10 @@ public class TermRevision {
     @Column(nullable = false, length = 50)
     private String afterTitle;
 
-    @Column(nullable = true, length = 2_000)
+    @Column(nullable = true, length = 5_000)
     private String beforeDefinition;
 
-    @Column(nullable = false, length = 2_000)
+    @Column(nullable = false, length = 5_000)
     private String afterDefinition;
 
     @CreatedDate
@@ -49,13 +49,13 @@ public class TermRevision {
         this.createdAt = LocalDateTime.now();
     }
 
-    public TermRevision(Term before, Term after) {
+    public TermRevision(Term before, String afterTitle, String afterDefinition) {
         this.version = null;
         this.ref = before;
         this.beforeTitle = before.getTitle();
-        this.afterTitle = after.getTitle();
+        this.afterTitle = afterTitle;
         this.beforeDefinition = before.getDefinition();
-        this.afterDefinition = after.getDefinition();
+        this.afterDefinition = afterDefinition;
         this.createdAt = LocalDateTime.now();
     }
 }

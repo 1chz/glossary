@@ -29,11 +29,14 @@
 .search-box-wrapper {
     position: relative;
     margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .search-box {
-    width: 100%;
-    padding: 12px;
+    flex: 1;
+    padding: 12px 20px;
     font-size: 16px;
     border: 2px solid #1e90ff;
     border-radius: 25px;
@@ -42,13 +45,34 @@
     transition: all 0.3s ease;
 }
 
+.search-box:focus {
+    border-color: #0066cc;
+    box-shadow: 0 4px 10px rgba(30,144,255,0.2);
+}
+
 .search-button {
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 8px 20px;
-    font-size: 14px;
+    padding: 9px 24px;
+    font-size: 16px;
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.search-button:hover {
+    background-color: #0066cc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(30,144,255,0.2);
+}
+
+.search-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(30,144,255,0.1);
 }
 
 .term-card {
@@ -64,19 +88,6 @@
 .term-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.term-definition {
-    color: #444;
-    line-height: 1.6;
-    margin-bottom: 15px;
-    white-space: pre-line;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-height: 3.2em; /* line-height * 2 */
 }
 
 .term-header {
@@ -112,6 +123,12 @@
     line-height: 1.6;
     margin-bottom: 15px;
     white-space: pre-line;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3.2em;
 }
 
 .no-results {
@@ -147,5 +164,13 @@
 
     .search-title {
         font-size: 1.5em;
+    }
+
+    .search-box-wrapper {
+        flex-direction: column;
+    }
+
+    .search-button {
+        width: 100%;
     }
 }

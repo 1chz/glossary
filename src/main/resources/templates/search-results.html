@@ -34,15 +34,15 @@
                 <div class="term-header">
                     <h3 class="term-title" th:text="${term.title()}"></h3>
                     <div class="term-meta">
-            <span class="term-date">
-                등록일: <span th:text="${#temporals.format(term.createdAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
-            </span>
                         <span class="term-date">
-                수정일: <span th:text="${#temporals.format(term.updatedAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
-            </span>
+                            등록일: <span th:text="${#temporals.format(term.createdAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
+                        </span>
+                        <span class="term-date">
+                            수정일: <span th:text="${#temporals.format(term.updatedAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
+                        </span>
                     </div>
                 </div>
-                <p class="term-definition" th:text="${#strings.length(term.definition()) > 50 ? #strings.substring(term.definition(), 0, 50) + '...' : term.definition()}"></p>
+                <p class="term-definition" th:utext="${term.shortDefinition()}"></p>
             </div>
         </div>
 
@@ -76,4 +76,3 @@
 </script>
 </body>
 </html>
-
