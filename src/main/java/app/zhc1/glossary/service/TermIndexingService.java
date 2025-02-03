@@ -19,13 +19,15 @@ public class TermIndexingService {
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void initializeHibernateSearch() {
-        log.info("Starting indexing...");
+        log.info("In indexing terms...");
+
         try {
             SearchSession searchSession = Search.session(entityManager);
             searchSession.massIndexer().startAndWait();
-            log.info("Completed indexing");
+            log.info("Completed indexing!");
+
         } catch (InterruptedException e) {
-            log.error("Failed to index", e);
+            log.error("Failed to index: {}", e.getMessage());
         }
     }
 }

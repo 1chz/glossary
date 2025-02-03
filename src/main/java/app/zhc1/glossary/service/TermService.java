@@ -5,6 +5,7 @@ import app.zhc1.glossary.domain.TermRevision;
 import app.zhc1.glossary.repository.TermRepository;
 import app.zhc1.glossary.repository.TermRevisionRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.hibernate.search.mapper.orm.Search;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,7 @@ public class TermService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Term> getAllTerms(Pageable pageable) {
+    public Page<Term> get(Pageable pageable) {
         return termRepository.findAll(pageable);
     }
 
@@ -39,22 +41,22 @@ public class TermService {
             throw new IllegalArgumentException("Invalid add operation: %s".formatted(term));
         }
 
-        Term newTerm = termRepository.save(term);
-        termRevisionRepository.save(new TermRevision(newTerm));
-        return newTerm;
+        term = termRepository.save(term);
+        termRevisionRepository.save(new TermRevision(term));
+        return term;
     }
 
     @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public Term update(Term updatedTerm) {
         if (updatedTerm.isNew()) {
             throw new IllegalArgumentException("Invalid update operation: %s".formatted(updatedTerm));
         }
 
-        Term existingTerm = termRepository
+        var existingTerm = termRepository
                 .findById(updatedTerm.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Term not found: %s".formatted(updatedTerm)));
-
-        TermRevision revision = new TermRevision(existingTerm, updatedTerm.getTitle(), updatedTerm.getDefinition());
+        var revision = new TermRevision(existingTerm, updatedTerm.getTitle(), updatedTerm.getDefinition());
 
         existingTerm.updateTitle(updatedTerm.getTitle());
         existingTerm.updateDefinition(updatedTerm.getDefinition());
@@ -70,7 +72,7 @@ public class TermService {
                 .where(f -> f.match()
                         .fields("title", "definition")
                         .matching(keyword)
-                        .fuzzy(calculateFuzzyDistance(keyword)))
+                        .fuzzy(this.calculateFuzzyDistance(keyword)))
                 .fetchAllHits();
     }
 
@@ -81,7 +83,7 @@ public class TermService {
                 .where(f -> f.match()
                         .fields("title", "definition")
                         .matching(keyword)
-                        .fuzzy(calculateFuzzyDistance(keyword)))
+                        .fuzzy(this.calculateFuzzyDistance(keyword)))
                 .fetch((int) pageable.getOffset(), pageable.getPageSize());
 
         return new PageImpl<>(results.hits(), pageable, results.total().hitCount());

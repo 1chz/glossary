@@ -22,34 +22,17 @@ public class AdminPageController {
     @GetMapping("/admin")
     public String adminPage(
             @RequestParam(required = false) String keyword,
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
-        Page<SearchResultModel> terms;
-        if (StringUtils.hasText(keyword)) {
-            terms = termService
-                    .query(keyword, pageable)
-                    .map(term -> new SearchResultModel(
-                            term.getId(),
-                            term.getTitle(),
-                            term.getDefinition(),
-                            term.getCreatedAt(),
-                            term.getUpdatedAt()));
-        } else {
-            terms = termService
-                    .getAllTerms(pageable)
-                    .map(term -> new SearchResultModel(
-                            term.getId(),
-                            term.getTitle(),
-                            term.getDefinition(),
-                            term.getCreatedAt(),
-                            term.getUpdatedAt()));
-        }
+        Page<SearchResultModel> searchResult = StringUtils.hasText(keyword)
+                ? termService.query(keyword, pageable).map(SearchResultModel::new)
+                : termService.get(pageable).map(SearchResultModel::new);
 
         model.addAttribute("keyword", keyword);
-        model.addAttribute("terms", terms);
-        model.addAttribute("currentPage", terms.getNumber());
-        model.addAttribute("totalPages", terms.getTotalPages());
-        model.addAttribute("totalItems", terms.getTotalElements());
+        model.addAttribute("terms", searchResult.getContent());
+        model.addAttribute("currentPage", searchResult.getNumber());
+        model.addAttribute("totalPages", searchResult.getTotalPages());
+        model.addAttribute("totalItems", searchResult.getTotalElements());
 
         return "admin/index";
     }

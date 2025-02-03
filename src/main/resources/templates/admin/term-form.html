@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${term != null ? '용어 수정' : '새 용어 등록'} + ' - Glossary'"></title>
@@ -8,7 +6,6 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/term-form.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 <body>
@@ -27,6 +24,7 @@
 
         <form id="termForm" th:action="${term != null ? '/api/v1/terms/' + term.id() : '/api/v1/terms'}"
               method="POST" class="term-form">
+            <input type="hidden" id="termId" name="id" th:value="${term != null ? term.id() : ''}">
             <div class="form-group">
                 <label for="title">용어</label>
                 <input type="text" id="title" name="title"
@@ -60,12 +58,12 @@
         theme: 'snow',
         modules: {
             toolbar: [
-                [{ 'header': [1, 2, 3, false] }],
+                [{'header': [1, 2, 3, false]}],
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                [{ 'script': 'sub'}, { 'script': 'super' }],
-                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                [{'script': 'sub'}, {'script': 'super'}],
+                [{'indent': '-1'}, {'indent': '+1'}],
                 ['link'],
                 ['clean']
             ]
@@ -86,7 +84,7 @@
         characterCount.parentElement.classList.toggle('limit-exceeded', length > MAX_LENGTH);
     }
 
-    quill.on('text-change', function() {
+    quill.on('text-change', function () {
         updateCharacterCount();
     });
 
@@ -96,9 +94,10 @@
         updateCharacterCount();
     }
 
-    document.getElementById('termForm').onsubmit = function(e) {
+    document.getElementById('termForm').onsubmit = function (e) {
         e.preventDefault();
 
+        const termId = document.getElementById('termId').value;
         const title = document.getElementById('title').value;
         const definition = quill.root.innerHTML;
         const length = countCharacters();
@@ -114,6 +113,7 @@
         }
 
         const formData = {
+            id: termId,
             title: title,
             definition: definition
         };

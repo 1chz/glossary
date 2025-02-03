@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>검색 결과 - Glossary</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/search-results.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -30,7 +27,8 @@
         </div>
 
         <div class="results-list" th:if="${!searchResults.empty}">
-            <div class="term-card" th:each="term : ${searchResults}" th:data-id="${term.id()}" onclick="goToDetail(this.getAttribute('data-id'))">
+            <div class="term-card" th:each="term : ${searchResults}" th:data-id="${term.id()}"
+                 onclick="goToDetail(this.getAttribute('data-id'))">
                 <div class="term-header">
                     <h3 class="term-title" th:text="${term.title()}"></h3>
                     <div class="term-meta">
@@ -68,7 +66,7 @@
         window.location.href = `/terms/${id}`;
     }
 
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             search();
         }

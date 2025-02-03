@@ -21,14 +21,12 @@ public class TermController {
 
     @PostMapping("/api/v1/terms")
     public Term add(@RequestBody TermCreateRequest request) {
-        Term term = new Term(request.title(), request.definition());
-        return termService.add(term);
+        return termService.add(request.toTerm());
     }
 
     @PostMapping("/api/v1/terms/{id}")
     public String update(@RequestBody TermUpdateRequest request) {
-        Term term = new Term(request.id(), request.title(), request.definition());
-        Term updatedTerm = termService.update(term);
+        Term updatedTerm = termService.update(request.toTerm());
         return "redirect:/admin/terms/%d/edit".formatted(updatedTerm.getId());
     }
 

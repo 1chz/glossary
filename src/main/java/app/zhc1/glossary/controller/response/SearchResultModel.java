@@ -1,5 +1,6 @@
 package app.zhc1.glossary.controller.response;
 
+import app.zhc1.glossary.domain.Term;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -13,6 +14,10 @@ public final class SearchResultModel {
     private final String shortDefinition;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
+
+    public SearchResultModel(Term term) {
+        this(term.getId(), term.getTitle(), term.getDefinition(), term.getCreatedAt(), term.getUpdatedAt());
+    }
 
     public SearchResultModel(
             int id, String title, String definition, LocalDateTime createdAt, LocalDateTime updatedAt) {

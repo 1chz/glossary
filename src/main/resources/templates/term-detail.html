@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${detail.title() + ' - Glossary'}">용어 상세 - Glossary</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/term-detail.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -25,11 +21,13 @@
                 <div class="term-meta">
                     <div class="meta-item">
                         <span class="meta-label">등록일</span>
-                        <span class="meta-value" th:text="${#temporals.format(detail.createdAt(), 'yyyy.MM.dd')}"></span>
+                        <span class="meta-value"
+                              th:text="${#temporals.format(detail.createdAt(), 'yyyy.MM.dd')}"></span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">최종 수정일</span>
-                        <span class="meta-value" th:text="${#temporals.format(detail.updatedAt(), 'yyyy.MM.dd HH:mm')}"></span>
+                        <span class="meta-value"
+                              th:text="${#temporals.format(detail.updatedAt(), 'yyyy.MM.dd HH:mm')}"></span>
                     </div>
                 </div>
             </div>

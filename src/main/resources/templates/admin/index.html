@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>관리자 페이지 - Glossary</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -49,7 +46,8 @@
                             </span>
                         <span class="term-update">
                                 <i class="far fa-clock"></i>
-                                최종 수정: <span th:text="${#temporals.format(term.updatedAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
+                                최종 수정: <span
+                                th:text="${#temporals.format(term.updatedAt(), 'yyyy.MM.dd HH:mm:ss')}"></span>
                             </span>
                     </div>
                 </div>

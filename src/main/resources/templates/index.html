@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Glossary</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -34,7 +31,7 @@
     const searchResults = document.getElementById('searchResults');
     const baseUrl = searchInput.getAttribute('data-search-url');
 
-    searchInput.addEventListener('keyup', function(e) {
+    searchInput.addEventListener('keyup', function (e) {
         if (e.key === 'Enter') {
             goToSearchPage();
             return;
